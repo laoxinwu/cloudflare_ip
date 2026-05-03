@@ -70,17 +70,16 @@ cat best_ips.txt
 ```bash
 cat full_ips.txt
 ```
-
 - 测速并上传 GitHub：
   - 获取 GitHub Token：在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
   - 编辑配置文件：
 ```bash
 nano linux_start.sh
 ```
-| :--- | :--- |
-| **export GITHUB_TOKEN=** | 你的_ghp_开头的Token |
-| **export GITHUB_REPO=** | 你的仓库HTTPS链接 |
-
+```bash
+export GITHUB_TOKEN=你的_ghp_开头的Token
+export GITHUB_REPO=你的仓库HTTPS链接
+```
   - 脚本启动：
 ```bash
 bash linux_start.sh 或 ./linux_start.sh
