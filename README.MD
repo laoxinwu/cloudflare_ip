@@ -124,10 +124,12 @@ bash linux_start.sh
 > 适合在本地电脑快速测速，或利用电脑闲置带宽更新仓库。
 
 1. **环境准备**：
+
    - 安装 [Python 3.x](https://www.python.org/)（安装时务必勾选 **Add Python to PATH**）。
    - 安装 [Git for Windows](https://git-scm.com/)。
 
 2. **下载项目**：
+
    - 在文件夹空白处右键选择 `Git Bash Here`，输入：
 ```bash
 git clone [https://github.com/svip-s/cloudflare_ip.git](https://github.com/svip-s/cloudflare_ip.git)
@@ -135,12 +137,15 @@ cd cloudflare_ip
 ```
 
 3. **运行脚本**：
+
    - 只测速不上传：
 ```bash
 python update.py --no-github-sync
 ```
    - 自动化同步：
+
      - 编辑 win_start.ps1，填入你的 GITHUB_TOKEN 和 GITHUB_REPO。
+
      - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
 
 #
@@ -166,6 +171,7 @@ chmod +x *.sh *.py
 bash linux_start.sh
 ```
    - 定时任务 (Crontab)：
+
      - 输入 crontab -e，添加以下内容（每天凌晨 4 点自动跑）：
 ```bash
 0 4 * * * cd /你的目录路径/cloudflare_ip && bash linux_start.sh <<EOF
