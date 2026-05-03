@@ -77,12 +77,17 @@ cat full_ips.txt
 nano linux_start.sh
 ```
 ```bash
+# 需要修改的内容
 export GITHUB_TOKEN=你的_ghp_开头的Token
 export GITHUB_REPO=你的仓库HTTPS链接
 ```
   - 脚本启动：
 ```bash
-bash linux_start.sh 或 ./linux_start.sh
+bash linux_start.sh
+```
+或
+```bash
+./linux_start.sh
 ```
 #### 常用快捷键与命令
 | 动作 | 命令/按键 |
@@ -90,7 +95,11 @@ bash linux_start.sh 或 ./linux_start.sh
 | **Nano 保存编辑** | Ctrl + O |
 | **Nano 退出编辑** | Ctrl + X |
 | **强行停止脚本运行** | Ctrl + C |
+| **查看目录和文件名** | ls |
+| **进入目录** | cd <目录名> |
+| **查看文件内容** | cat <文件名> |
 
+#### 优选IP文件
 | 文件名 | 文件内容 |
 | :--- | :--- |
 | **best_ips.txt** | 高速优选 |
