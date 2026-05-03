@@ -67,7 +67,7 @@ chmod +x *.sh *.py
 termux-setup-storage
 ```
 #
-- **只测速不上传 GitHub：**
+- **只测速不上传 GitHub**：
 ```bash
 python update.py --no-github-sync
 ```
@@ -80,7 +80,7 @@ cat best_ips.txt
 cat full_ips.txt
 ```
 #
-- **测速并上传 GitHub：**
+- **测速并上传 GitHub**：
 
   - 获取 GitHub Token：在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
 
@@ -120,7 +120,7 @@ bash linux_start.sh
 | **domain.txt** | 优选域名 |
 
 #
-### 💻 电脑端 (Windows)
+### 电脑端 (Windows)
 > 适合在本地电脑快速测速，或利用电脑闲置带宽更新仓库。
 
 1. **环境准备**：
@@ -132,3 +132,43 @@ bash linux_start.sh
 ```bash
 git clone [https://github.com/svip-s/cloudflare_ip.git](https://github.com/svip-s/cloudflare_ip.git)
 cd cloudflare_ip
+```
+
+3. **运行脚本**：
+   - 只测速不上传：
+```bash
+python update.py --no-github-sync
+```
+   - 自动化同步：
+     - 编辑 win_start.ps1，填入你的 GITHUB_TOKEN 和 GITHUB_REPO。
+     - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
+
+#
+### Linux 服务端 (Ubuntu/Debian/CentOS)
+> 适合部署在 VPS 服务器上，实现 24h 无人值守自动更新。
+
+1. **安装依赖** (以 Ubuntu 为例)：
+```bash
+sudo apt update && sudo apt install python3 python3-pip git -y
+pip3 install tqdm
+```
+
+2. **部署脚本**：
+```bash
+git clone [https://github.com/svip-s/cloudflare_ip.git](https://github.com/svip-s/cloudflare_ip.git)
+cd cloudflare_ip
+chmod +x *.sh *.py
+```
+
+3. **执行与自动化**：
+   - 手动运行：
+```bash
+bash linux_start.sh
+```
+   - 定时任务 (Crontab)：
+     - 输入 crontab -e，添加以下内容（每天凌晨 4 点自动跑）：
+```bash
+0 4 * * * cd /你的目录路径/cloudflare_ip && bash linux_start.sh <<EOF
+2
+EOF
+```
