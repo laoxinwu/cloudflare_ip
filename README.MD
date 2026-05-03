@@ -90,8 +90,8 @@ nano linux_start.sh
 ```
 ```bash
 # 需要修改的内容
-export GITHUB_TOKEN=你的_ghp_开头的Token
-export GITHUB_REPO=你的仓库HTTPS链接
+export GITHUB_TOKEN="你的_ghp_开头的Token"
+export GITHUB_REPO="你的仓库HTTPS链接"
 ```
 - 脚本启动：
 ```bash
