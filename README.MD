@@ -126,6 +126,7 @@ bash linux_start.sh
 1. **环境准备**：
 
    - 安装 [Python 3.x](https://www.python.org/)（安装时务必勾选 **Add Python to PATH**）。
+
    - 安装 [Git for Windows](https://git-scm.com/)。
 
 2. **下载项目**：
