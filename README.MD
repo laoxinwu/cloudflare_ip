@@ -103,14 +103,23 @@ bash linux_start.sh
 ```
 #### 定时任务：
 
-1. 安装工具
+1. 安装 cron 服务和后台服务管理工具
 ```bash
-pkg install cronie termux-services
+pkg install cronie termux-services -y
 ```
-2. 编写一个简单的启动脚本 (auto.sh)：
+
+2. 启动 cron 服务并设置开机自启
+```bash
+sv-enable crond
+```
+
+3. 编写一个简单的启动脚本 (auto.sh)：
 
 因为脚本运行需要模拟输入，在 cloudflare_ip 目录下建个 auto.sh：
-
+```bash
+nano auto.sh
+```
+粘贴以下内容保存：
 ```bash
 #!/bin/bash
 cd /data/data/com.termux/files/home/cloudflare_ip
@@ -125,14 +134,29 @@ chmod +x auto.sh
 ```
 
 4. 设置定时任务：
-输入 crontab -e，添加一行：
 ```bash
-0 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh
+crontab -e
 ```
-表示每天凌晨 4 点自动跑测速并上传。
+
+添加一行：
+```bash
+30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
+```
+表示每天凌晨 4：30 自动跑测速并上传，cron_log.log 为日志文件，万一哪天没成功，可以进行查看原因。
+
+```bash
+# 查看日志
+cat ~/cloudflare_ip/cron_log.log
+```
+
+5. 验证是否配置成功？
+```bash
+bash ~/cloudflare_ip/auto.sh
+```
+如果成功上传到 GitHub 则表示配置成功。
 
 > ⚠️ 注意： 由于安卓系统会杀后台，你需要确保 Termux 开启了 Acquire wakelock（下拉通知栏那个），并且在系统设置里把 Termux 设为电池优化“无限制”。
-建议可以使用家里的旧手机进行部署，如果你不介意耗电也可以在你常用的安卓设备或手机部署安装。
+> 建议可以使用家里的旧手机进行部署，如果你不介意耗电也可以在你常用的安卓设备或手机部署安装。
 
 #
 #### 常用快捷键与命令
