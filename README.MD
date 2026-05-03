@@ -6,9 +6,18 @@
 
 ## 订阅链接
 
-- 高速优选：`https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/best_ips.txt`
-- 所有可用：`https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/full_ips.txt`
-- 优选域名：`https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.txt`
+- 高速优选：
+```bash
+https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/best_ips.txt
+```
+- 所有可用：
+```bash
+https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/full_ips.txt
+```
+- 优选域名：
+```bash
+https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.txt
+```
 
 ## 订阅链接使用方法
 
