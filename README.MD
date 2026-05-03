@@ -118,3 +118,17 @@ bash linux_start.sh
 | **best_ips.txt** | 高速优选 |
 | **full_ips.txt** | 所有可用 |
 | **domain.txt** | 优选域名 |
+
+#
+### 💻 电脑端 (Windows)
+> 适合在本地电脑快速测速，或利用电脑闲置带宽更新仓库。
+
+1. **环境准备**：
+   - 安装 [Python 3.x](https://www.python.org/)（安装时务必勾选 **Add Python to PATH**）。
+   - 安装 [Git for Windows](https://git-scm.com/)。
+
+2. **下载项目**：
+   - 在文件夹空白处右键选择 `Git Bash Here`，输入：
+```bash
+git clone [https://github.com/svip-s/cloudflare_ip.git](https://github.com/svip-s/cloudflare_ip.git)
+cd cloudflare_ip
