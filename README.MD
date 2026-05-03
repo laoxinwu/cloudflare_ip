@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-03 20:08:58
+**本次更新**: 2026-05-03 21:12:36
 
 ## 订阅链接
 
@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 
 1. 更新软件包列表：
 ```bash
-pkg update && pkg upgrade
+pkg update && pkg upgrade -y
 ```
 2. 安装 Python, Git 和基础工具：
 ```bash
@@ -108,7 +108,7 @@ bash linux_start.sh
 pkg install cronie termux-services -y
 ```
 
-2. 启动 cron 服务并设置开机自启
+2. 重启 Termux 软件（关闭重新打开），启动 cron 服务并设置开机自启
 
 启动并设置自启：
 ```bash
@@ -213,7 +213,7 @@ ls $PREFIX/var/service
 ```
 查看 crond 状态：
 
-确保显示下面内容才算成功：
+确保显示下面内容才算成功，如果显示不是该内容，强制结束 Termux 应用，然后重新打开，然后重新输入设置自启命令，再输入手动开启命令：
 
 run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
 ```bash
