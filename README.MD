@@ -102,12 +102,15 @@ bash linux_start.sh
 ./linux_start.sh
 ```
 #### 定时任务：
+
 1. 安装工具
 ```bash
 pkg install cronie termux-services
 ```
 2. 编写一个简单的启动脚本 (auto.sh)：
+
 因为脚本运行需要模拟输入，在 cloudflare_ip 目录下建个 auto.sh：
+
 ```bash
 #!/bin/bash
 cd /data/data/com.termux/files/home/cloudflare_ip
@@ -115,10 +118,12 @@ bash linux_start.sh <<EOF
 2
 EOF
 ```
+
 3. 赋予脚本执行权限：
 ```bash
 chmod +x auto.sh
 ```
+
 4. 设置定时任务：
 输入 crontab -e，添加一行：
 ```bash
