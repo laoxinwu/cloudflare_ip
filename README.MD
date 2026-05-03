@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-03 15:28:04
+**本次更新**: 2026-05-03 16:09:11
 
 ## 订阅链接
 
@@ -110,13 +110,17 @@ pkg install cronie termux-services -y
 
 2. 启动 cron 服务并设置开机自启
 
-启动：
+启动并设置自启：
 ```bash
 sv-enable crond
 ```
-关闭：
+停止运行：
 ```bash
 sv-down crond
+```
+彻底禁用自启：
+```bash
+sv-disable crond
 ```
 
 3. 编写一个简单的启动脚本 (auto.sh)：
@@ -125,7 +129,7 @@ sv-down crond
 ```bash
 nano auto.sh
 ```
-粘贴以下代码保存，代码设置了循环，如果上传失败会重新尝试5次：
+粘贴以下代码保存，代码设置了循环，如果上传失败会重新尝试3次：
 
 ```bash
 #!/bin/bash
@@ -134,7 +138,7 @@ nano auto.sh
 cd /data/data/com.termux/files/home/cloudflare_ip
 
 # 2. 设置上传失败后最大尝试次数
-MAX_RETRIES=5
+MAX_RETRIES=3
 RETRY_COUNT=0
 
 # 3. 开始循环尝试
@@ -192,7 +196,7 @@ crontab -e
 
 > GitHub 限制：如果你过于频繁地推送（Push）到 GitHub（比如每几分钟一次），可能会触发 GitHub 的滥用检测，或者让你的 Commit 历史变得异常臃肿（全是测速日志）。
 
-> IP 更新频率：Cloudflare 的边缘 IP 变动其实没那么快。通常 4 小时或 6 小时跑一次（比如 0 */6 * * *）已经绰绰有余了。
+> IP 更新频率：Cloudflare 的边缘 IP 变动其实没那么快。一天一次固定时间也行，通常 4 小时或 6 小时跑一次也可以，如果你怕运营商发力，可以适当把频率调快一些，但是最好不要太快，设备耗电和 GitHub 的滥用检测也是问题。
 
 查看日志
 ```bash
