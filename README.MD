@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-03 14:39:14
+**本次更新**: 2026-05-03 15:28:04
 
 ## 订阅链接
 
@@ -109,8 +109,14 @@ pkg install cronie termux-services -y
 ```
 
 2. 启动 cron 服务并设置开机自启
+
+启动：
 ```bash
 sv-enable crond
+```
+关闭：
+```bash
+sv-down crond
 ```
 
 3. 编写一个简单的启动脚本 (auto.sh)：
@@ -197,6 +203,27 @@ cat ~/cloudflare_ip/cron_log.log
 crontab -l
 ```
 
+查看开机自启服务：
+```bash
+ls $PREFIX/var/service
+```
+查看 crond 状态：
+
+确保显示下面内容才算成功：
+
+run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
+```bash
+sv status crond
+```
+手动开启：
+```bash
+sv up crond
+```
+手动关闭：
+```bash
+sv down crond
+```
+
 6. 验证是否配置成功？
 ```bash
 bash ~/cloudflare_ip/auto.sh
@@ -211,7 +238,7 @@ bash ~/cloudflare_ip/auto.sh
 #### 常用快捷键与命令
 | 动作 | 命令/按键 |
 | :--- | :--- |
-| **Nano 保存编辑** | Ctrl + O |
+| **Nano 保存编辑** | Ctrl + O, Enter|
 | **Nano 退出编辑** | Ctrl + X |
 | **强行停止脚本运行** | Ctrl + C |
 | **查看目录和文件名** | ls |
