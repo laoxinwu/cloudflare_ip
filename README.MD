@@ -31,59 +31,66 @@
 
 1. 更新软件包列表：
 ```bash
- pkg update && pkg upgrade
+pkg update && pkg upgrade
 ```
 2. 安装 Python, Git 和基础工具：
 ```bash
- pkg install python git -y
+pkg install python git -y
 ```
 3. 安装脚本依赖库：
 ```bash
- pip install tqdm
+pip install tqdm
 ```
 4. 克隆仓库：
 ```bash
- git clone https://github.com/svip-s/cloudflare_ip.git
+git clone https://github.com/svip-s/cloudflare_ip.git
 ```
 5. 进入目录：
 ```bash
- cd cloudflare_ip
+cd cloudflare_ip
 ```
 6. 赋予脚本执行权限：
 ```bash
- chmod +x *.sh *.py
+chmod +x *.sh *.py
 ```
 7. 获取存储权限：
 ```bash
- termux-setup-storage
+termux-setup-storage
 ```
 
 - 只测速不上传 GitHub：
 ```bash
- python update.py --no-github-sync
+python update.py --no-github-sync
 ```
   - 查看高速优选：
 ```bash
-    cat best_ips.txt
+cat best_ips.txt
 ```
   - 查看所有可用：
 ```bash
-    cat full_ips.txt
+cat full_ips.txt
 ```
 
 - 测速并上传 GitHub：
   - 获取 GitHub Token：在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
   - 编辑配置文件：
 ```bash
-    nano linux_start.sh
+nano linux_start.sh
 ```
+| :--- | :--- |
 | **export GITHUB_TOKEN=** | 你的_ghp_开头的Token |
 | **export GITHUB_REPO=** | 你的仓库HTTPS链接 |
-#### 保存： Ctrl + O
-#### 退出： Ctrl + X
-  - 脚本启动： bash linux_start.sh 或 ./linux_start.sh
 
-####脚本运行过程中如果想退出： Ctrl + C
+  - 脚本启动：
+```bash
+bash linux_start.sh 或 ./linux_start.sh
+```
+#### 常用快捷键与命令
+| 动作 | 命令/按键 |
+| :--- | :--- |
+| **Nano 保存编辑** | Ctrl + O |
+| **Nano 退出编辑** | Ctrl + X |
+| **强行停止脚本运行** | Ctrl + C |
 
 | 文件名 | 文件内容 |
 | :--- | :--- |
