@@ -57,8 +57,8 @@ chmod +x *.sh *.py
 ```bash
 termux-setup-storage
 ```
-
-- 只测速不上传 GitHub：
+#
+- **只测速不上传 GitHub：**
 ```bash
 python update.py --no-github-sync
 ```
@@ -70,7 +70,8 @@ cat best_ips.txt
 ```bash
 cat full_ips.txt
 ```
-- 测速并上传 GitHub：
+#
+- **测速并上传 GitHub：**
   - 获取 GitHub Token：在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
   - 编辑配置文件：
 ```bash
