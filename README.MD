@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-04 00:09:21
+**本次更新**: 2026-05-04 01:03:17
 
 ## 订阅链接
 
@@ -108,7 +108,9 @@ bash linux_start.sh
 pkg install cronie termux-services -y
 ```
 
-2. 重启 Termux 软件（关闭重新打开），启动 cron 服务并设置开机自启
+2. 重启 Termux 软件（彻底关闭并重新打开）
+
+  - 启动 cron 服务并设置开机自启
 
 启动并设置自启：
 ```bash
@@ -122,6 +124,14 @@ sv-down crond
 ```bash
 sv-disable crond
 ```
+手动开启：
+```bash
+sv up crond
+```
+手动关闭：
+```bash
+sv down crond
+```
 
 3. 编写一个简单的启动脚本 (auto.sh)：
 
@@ -129,7 +139,7 @@ sv-disable crond
 ```bash
 nano auto.sh
 ```
-粘贴以下代码保存，代码设置了循环，如果上传失败会重新尝试3次：
+粘贴以下代码保存，代码设置了循环，如果上传失败说明可能网络波动，会重新尝试运行，默认3次：
 
 ```bash
 #!/bin/bash
@@ -211,22 +221,14 @@ crontab -l
 ```bash
 ls $PREFIX/var/service
 ```
-查看 crond 状态：
-
-确保显示下面内容才算成功，如果显示不是该内容，强制结束 Termux 应用，然后重新打开，然后重新输入设置自启命令，再输入手动开启命令：
-
-run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
+查看 cron 状态：
 ```bash
 sv status crond
 ```
-手动开启：
-```bash
-sv up crond
-```
-手动关闭：
-```bash
-sv down crond
-```
+
+确保显示下面内容才算成功，如果显示不是该内容，在应用管理强制关闭 Termux 应用（结束运行），重新打开，然后返回二步重新输入命令，先输入设置自启命令，再输入手动开启命令，最后强制关闭 Termux，再次重新打开软件，查看状态：
+
+run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
 
 6. 验证是否配置成功？
 ```bash
