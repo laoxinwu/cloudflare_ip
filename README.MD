@@ -292,6 +292,7 @@ bash linux_start.sh
 EOF
 ```
 
-## 项目来源
+## 代码来源
 
-[俊臻是真俊](https://github.com/HandsomeMJZ)｜[cfip](https://github.com/HandsomeMJZ/cfip)
+仓库：[cfip](https://github.com/HandsomeMJZ/cfip)
+作者：[俊臻是真俊](https://github.com/HandsomeMJZ)
