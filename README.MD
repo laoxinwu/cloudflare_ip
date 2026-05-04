@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-04 08:02:20
+**本次更新**: 2026-05-04 09:02:29
 
 ## 订阅链接
 
@@ -144,37 +144,36 @@ nano auto.sh
 ```bash
 #!/bin/bash
 
+# 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
-rm -f .git/index.lock
-
-pkill -9 git 2>/dev/null
-pkill -9 ssh 2>/dev/null
-
-git gc --prune=now 2>/dev/null
-
+# 2. 设置上传失败后最大尝试次数
 MAX_RETRIES=3
 RETRY_COUNT=0
 
+# 3. 开始循环尝试
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     
     echo "正在进行第 $RETRY_COUNT 次运行尝试..."
 
+    # 运行主脚本模式2（1表示：本地测速不上传，2表示：测速并上传），并捕获它的退出状态
     bash linux_start.sh <<EOF
 2
 EOF
 
+    # $? 是上一条命令的退出状态码，0 代表成功
     if [ $? -eq 0 ]; then
         echo "恭喜！脚本运行并上传成功。"
         exit 0
     else
-        echo "哎呀，第 $RETRY_COUNT 次尝试失败。"
+        echo "哎呀，第 $RETRY_COUNT 次尝试失败（可能是网络波动）。"
+        
         if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-            echo "等待 60 秒后重试..."
+            echo "等待 60 秒后进行下一次重试..."
             sleep 60
         else
-            echo "任务彻底失败。"
+            echo "已经连续尝试 $MAX_RETRIES 次均失败，任务终止。请检查网络或 GitHub Token。"
             exit 1
         fi
     fi
