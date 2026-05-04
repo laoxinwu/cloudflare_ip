@@ -110,7 +110,9 @@ bash linux_start.sh
 pkg install cronie termux-services -y
 ```
 2. 重启 Termux 软件（彻底关闭并重新打开）
-  - 启动 cron 服务并设置开机自启
+
+启动 cron 服务并设置开机自启
+
 启动并设置自启：
 ```bash
 sv-enable crond
