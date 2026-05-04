@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 不限时更新  
-**本次更新**: 2026-05-04 09:02:29
+**本次更新**: 2026-05-04 10:02:24
 
 ## 订阅链接
 
@@ -82,7 +82,9 @@ cat full_ips.txt
 #
 - **测速并上传 GitHub**：
 
-  - 获取 GitHub Token：在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
+  - 获取 GitHub Token：
+
+在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
 
 - 编辑配置文件：
 ```bash
@@ -101,17 +103,14 @@ bash linux_start.sh
 ```bash
 ./linux_start.sh
 ```
-#### 定时任务：
 
+#### 定时任务：
 1. 安装 cron 服务和后台服务管理工具
 ```bash
 pkg install cronie termux-services -y
 ```
-
 2. 重启 Termux 软件（彻底关闭并重新打开）
-
   - 启动 cron 服务并设置开机自启
-
 启动并设置自启：
 ```bash
 sv-enable crond
@@ -132,7 +131,6 @@ sv up crond
 ```bash
 sv down crond
 ```
-
 3. 编写一个简单的启动脚本 (auto.sh)：
 
 因为脚本运行需要模拟输入，在 cloudflare_ip 目录下建个 auto.sh：
@@ -140,56 +138,59 @@ sv down crond
 nano auto.sh
 ```
 粘贴以下代码保存，代码设置了循环，如果上传失败说明可能网络波动，会重新尝试运行，默认3次：
-
 ```bash
 #!/bin/bash
 
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
-# 2. 设置上传失败后最大尝试次数
+# 2. 环境大扫除
+# 强行删除可能残留的 Git 锁（防止“旧锁未拆”导致新任务死锁）
+rm -f .git/index.lock
+# 强制杀死残留进程（防止上一轮卡死的进程占用端口或资源）
+pkill -9 git 2>/dev/null
+pkill -9 ssh 2>/dev/null
+# 清理网络缓存与冗余对象（让 Git 每次都像“冷启动”一样清爽）
+git gc --prune=now 2>/dev/null
+
+# 3. 设置重试参数
 MAX_RETRIES=3
 RETRY_COUNT=0
 
-# 3. 开始循环尝试
+# 4. 开始循环尝试
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     
     echo "正在进行第 $RETRY_COUNT 次运行尝试..."
 
-    # 运行主脚本模式2（1表示：本地测速不上传，2表示：测速并上传），并捕获它的退出状态
+    # 运行主脚本
     bash linux_start.sh <<EOF
 2
 EOF
 
-    # $? 是上一条命令的退出状态码，0 代表成功
     if [ $? -eq 0 ]; then
         echo "恭喜！脚本运行并上传成功。"
         exit 0
     else
-        echo "哎呀，第 $RETRY_COUNT 次尝试失败（可能是网络波动）。"
-        
+        echo "哎呀，第 $RETRY_COUNT 次尝试失败。"
         if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-            echo "等待 60 秒后进行下一次重试..."
+            echo "等待 60 秒后重试..."
             sleep 60
         else
-            echo "已经连续尝试 $MAX_RETRIES 次均失败，任务终止。请检查网络或 GitHub Token。"
+            echo "任务彻底失败。"
             exit 1
         fi
     fi
 done
 ```
-
 4. 赋予脚本执行权限：
 ```bash
 chmod +x auto.sh
 ```
-
 5. 设置定时任务：
 ```bash
 crontab -e
 ```
-
 添加一行：
 ```bash
 30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
@@ -216,7 +217,6 @@ cat ~/cloudflare_ip/cron_log.log
 ```bash
 crontab -l
 ```
-
 查看开机自启服务：
 ```bash
 ls $PREFIX/var/service
@@ -226,7 +226,7 @@ ls $PREFIX/var/service
 sv status crond
 ```
 
-确保显示下面内容才算成功，如果显示不是该内容，在应用管理强制关闭 Termux 应用（结束运行），重新打开，然后返回二步重新输入命令，先输入设置自启命令，再输入手动开启命令，最后强制关闭 Termux，再次重新打开软件，查看状态：
+确保显示下面内容才算成功，如果显示不是该内容，需要重新配置 cron，在应用管理强制关闭 Termux（结束运行），重新打开，然后返回二步重新输入命令，先输入设置自启命令，再输入手动开启命令，再次关闭重启 Termux，输入指令查看状态，反复尝试，直到状态变为下面的格式：
 
 run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
 
