@@ -32,7 +32,6 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 
 ## 脚本使用方法
 ### 安卓端 Termux
-
 > ⚠️ 注意： 运行脚本进行测速时，请务必关闭手机上的 VPN 或代理工具，否则测出的是代理服务器的速度，而非你本地直连 Cloudflare 的真实速度。
 
 * **系统设置**：安装 Termux，关闭电池优化或设置省电策略为无限制，确保应用可以保持后台运行而不中断。
@@ -209,7 +208,7 @@ crontab -e
 
 > GitHub 限制：如果你过于频繁地推送（Push）到 GitHub（比如每几分钟一次），可能会触发 GitHub 的滥用检测，或者让你的 Commit 历史变得异常臃肿（全是测速日志）。
 
-> IP 更新频率：Cloudflare 的边缘 IP 变动其实没那么快。一天一次固定时间也行，通常 4 小时或 6 小时跑一次也可以，如果你怕运营商发力，可以适当把频率调快一些，但是最好不要太快，设备耗电和 GitHub 的滥用检测也是问题。
+> IP 更新频率：Cloudflare 的边缘 IP 变动其实没那么快。一天一次固定时间也行，通常 4 小时或 6 小时跑一次也可以，如果你怕运营商发力，可以适当把频率调快一些，但是最好不要太快，以免增加设备耗电和触发 GitHub 的滥用检测。
 
 查看日志
 ```bash
@@ -227,11 +226,10 @@ ls $PREFIX/var/service
 ```bash
 sv status crond
 ```
-
 确保显示下面内容才算成功，如果显示不是该内容，需要重新配置 cron，在应用管理强制关闭 Termux（结束运行），重新打开，然后返回二步重新输入命令，先输入设置自启命令，再输入手动开启命令，再次关闭重启 Termux，输入指令查看状态，反复尝试，直到状态变为下面的格式：
-
+```bash
 run: crond: (pid XXX) Xs; run: log: (pid XXX) Xs
-
+```
 6. 验证是否配置成功？
 ```bash
 bash ~/cloudflare_ip/auto.sh
