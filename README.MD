@@ -20,11 +20,17 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 ```
 
 区别:
+
   - 高速优选：
+
     - 是筛选出来的里面已通过测速的，想省事或者不知道该选哪个，就直接选这个。
+
   - 所有可用：
+
     - 是筛选出来每个地区延迟最低的前十个，不保证速度是最快的，适合二次自己测速。
+
   - 优选域名：
+
     - 收集的一些优选域名，可以作为备用，不太推荐使用，平时还行，人多了，高峰期比较卡，甚至断网。
 
 ## 订阅链接使用方法
@@ -411,7 +417,7 @@ EOF
 
 作者：[俊臻是真俊](https://github.com/HandsomeMJZ)
 
-## edgetunnel 相关
+## 相关
 
 仓库：[edgetunnel](https://github.com/cmliu/edgetunnel)
 
