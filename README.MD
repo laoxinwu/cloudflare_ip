@@ -83,6 +83,8 @@ termux-setup-storage
 #
 **只测速不上传 GitHub**：
 
+  - 启动命令：
+
 ```bash
 python update.py --no-github-sync
 ```
@@ -101,8 +103,6 @@ cat full_ips.txt
 
 #
 **测速并上传 GitHub**：
-
-> 获取 GitHub Token：
 
 > 在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
 
@@ -143,31 +143,31 @@ pkg install cronie termux-services -y
 
 启动 cron 服务并设置开机自启
 
-启动并设置自启：
+  - 启动并设置自启：
 
 ```bash
 sv-enable crond
 ```
 
-停止运行：
+  - 停止运行：
 
 ```bash
 sv-down crond
 ```
 
-彻底禁用自启：
+  - 彻底禁用自启：
 
 ```bash
 sv-disable crond
 ```
 
-手动开启：
+  - 手动开启：
 
 ```bash
 sv up crond
 ```
 
-手动关闭：
+  - 手动关闭：
 
 ```bash
 sv down crond
@@ -241,7 +241,7 @@ chmod +x auto.sh
 crontab -e
 ```
 
-添加一行（如果出现选择编辑器，建议选择 nano，除非你会使用其它编辑器，例如：vi）：
+添加下面内容（如果出现选择编辑器，建议选择 nano，除非你会使用其它编辑器，例如：vi）：
 
 ```bash
 30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
@@ -251,11 +251,11 @@ crontab -e
 
 调整运行频率可以修改比如：
 
-0 * * * * ： 表示每小时整点更新一次
+- 0 * * * * ： 表示每小时整点更新一次
 
-*/30 * * * * ： 表示半小时更新一次
+- */30 * * * * ： 表示半小时更新一次
 
-0 */6 * * * ： 表示6小时更新一次
+- 0 */6 * * * ： 表示6小时更新一次
 
 > GitHub 限制：如果你过于频繁地推送（Push）到 GitHub（比如每几分钟一次），可能会触发 GitHub 的滥用检测，或者让你的 Commit 历史变得异常臃肿（全是测速日志）。
 
@@ -267,19 +267,19 @@ crontab -e
 cat ~/cloudflare_ip/cron_log.log
 ```
 
-查看当前生效的任务
+  - 查看当前生效的任务
 
 ```bash
 crontab -l
 ```
 
-查看开机自启服务：
+  - 查看开机自启服务：
 
 ```bash
 ls $PREFIX/var/service
 ```
 
-查看 cron 状态：
+  - 查看 cron 状态：
 
 ```bash
 sv status crond
@@ -356,9 +356,9 @@ python update.py --no-github-sync
 
   - 自动化同步：
 
-   - 编辑 win_start.ps1，填入你的 GITHUB_TOKEN 和 GITHUB_REPO。
+    - 编辑 win_start.ps1，填入你的 GITHUB_TOKEN 和 GITHUB_REPO。
 
-   - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
+    - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
 
 #
 ### Linux 服务端 (Ubuntu/Debian/CentOS)
@@ -390,7 +390,7 @@ bash linux_start.sh
 
   - 定时任务：
 
-   - 输入 crontab -e，添加以下内容（每天凌晨 4 点自动跑）：
+    - 输入 crontab -e，添加以下内容（每天凌晨 4 点自动跑）：
  
 ```bash
 0 4 * * * cd /你的目录路径/cloudflare_ip && bash linux_start.sh <<EOF
