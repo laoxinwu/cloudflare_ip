@@ -67,7 +67,7 @@ chmod +x *.sh *.py
 termux-setup-storage
 ```
 #
-- **只测速不上传 GitHub**：
+**只测速不上传 GitHub**：
 ```bash
 python update.py --no-github-sync
 ```
@@ -80,9 +80,9 @@ cat best_ips.txt
 cat full_ips.txt
 ```
 #
-- **测速并上传 GitHub**：
+**测速并上传 GitHub**：
 
-  - 获取 GitHub Token：
+获取 GitHub Token：
 
 在 GitHub 设置中生成一个 Personal Access Token (classic)，确保勾选了 repo 权限。
 
@@ -103,8 +103,8 @@ bash linux_start.sh
 ```bash
 ./linux_start.sh
 ```
-
-#### 定时任务：
+#
+**定时任务**：
 1. 安装 cron 服务和后台服务管理工具
 ```bash
 pkg install cronie termux-services -y
