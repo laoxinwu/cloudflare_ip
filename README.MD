@@ -6,18 +6,26 @@
 
 ## 订阅链接
 
-- 高速优选：
+  - 高速优选：
 ```bash
 https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/best_ips.txt
 ```
-- 所有可用：
+  - 所有可用：
 ```bash
 https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/full_ips.txt
 ```
-- 优选域名：
+  - 优选域名：
 ```bash
 https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.txt
 ```
+
+区别:
+  - 高速优选：
+    - 是筛选出来的里面已通过测速的，想省事或者不知道该选哪个，就直接选这个。
+  - 所有可用：
+    - 是筛选出来每个地区延迟最低的前十个，不保证速度是最快的，适合二次自己测速。
+  - 优选域名：
+    - 收集的一些优选域名，可以作为备用，不太推荐使用，平时还行，人多了，高峰期比较卡，甚至断网。
 
 ## 订阅链接使用方法
 
@@ -27,7 +35,6 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 4. 在订阅接口 / API / URL 中粘贴订阅链接。
 5. 验证可用性，选择“追加 API”。
 6. 保存并重新订阅。
-
 
 
 ## 脚本使用方法
@@ -261,7 +268,7 @@ crontab -e
 
 > IP 更新频率：Cloudflare 的边缘 IP 变动其实没那么快。一天一次固定时间也行，通常 4 小时或 6 小时跑一次也可以，如果你怕运营商发力，可以适当把频率调快一些，但是最好不要太快，以免增加设备耗电和触发 GitHub 的滥用检测。
 
-查看日志
+  - 查看日志
 
 ```bash
 cat ~/cloudflare_ip/cron_log.log
@@ -403,3 +410,9 @@ EOF
 仓库：[cfip](https://github.com/HandsomeMJZ/cfip)
 
 作者：[俊臻是真俊](https://github.com/HandsomeMJZ)
+
+## edgetunnel 相关
+
+仓库：[edgetunnel](https://github.com/cmliu/edgetunnel)
+
+作者：[cmliu](https://github.com/cmliu)
