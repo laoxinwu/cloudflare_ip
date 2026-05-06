@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-06 14:03:18
+**本次更新**: 2026-05-06 16:23:45
 
 ## 订阅链接
 
@@ -260,14 +260,14 @@ EOF
 
     # 检查主脚本的退出状态码
     if [ $? -eq 0 ]; then
-        # --- [新增：提取最快IP] ---
+        # --- [提取最快IP] ---
         TOP_IP=$(head -n 1 best_ips.txt | awk '{print $1}')
         
         echo "----------------------------------------------------"
         echo "✅ [$(date '+%Y-%m-%d %H:%M:%S')] 脚本运行并上传成功。"
         echo "===================================================="
         
-        # --- [新增：成功通知] ---
+        # --- [成功通知] ---
         MSG="🚀 *GitHub 同步成功* %0A🔥 最快 IP：\`$TOP_IP\` %0A⏰ 时间：$(date '+%H:%M:%S')"
         curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
              -d "chat_id=${TG_CHAT_ID}" \
@@ -284,7 +284,7 @@ EOF
             echo "‼️ [$(date '+%Y-%m-%d %H:%M:%S')] 任务在尝试 $MAX_RETRIES 次后彻底失败。"
             echo "===================================================="
             
-            # --- [新增：彻底失败通知] ---
+            # --- [彻底失败通知] ---
             FAIL_MSG="‼️ *GitHub 同步彻底失败* %0A❌ 经过 $MAX_RETRIES 次重试仍未成功。 %0A⏰ 时间：$(date '+%H:%M:%S')"
             curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
                  -d "chat_id=${TG_CHAT_ID}" \
@@ -447,7 +447,7 @@ echo "===================================================="
 rm -f .git/index.lock
 pkill -9 git 2>/dev/null
 
-# 2. 运行测速 (仅运行一次)
+# 2. 运行测速
 echo "[$(date '+%H:%M:%S')] 正在进行本地测速..."
 bash linux_start.sh <<EOF
 2
@@ -455,7 +455,7 @@ EOF
 
 # 3. 针对 R2 的专项上传循环 (重试 3 次)
 if [ -f "best_ips.txt" ]; then
-    # 提取最快 IP
+    # --- [提取最快IP] ---
     TOP_IP=$(head -n 1 best_ips.txt | awk '{print $1}')
     
     MAX_R2_RETRIES=3
@@ -493,7 +493,7 @@ EOF
             echo "✅ [$(date '+%H:%M:%S')] R2 同备圆满完成！"
             echo "===================================================="
             
-            # --- 成功通知 ---
+            # --- [成功通知] ---
             MSG="🚀 *R2 优选同步成功* %0A🔥 最快 IP：\`$TOP_IP\` %0A⏰ 时间：$(date '+%H:%M:%S')"
             curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
                  -d "chat_id=${TG_CHAT_ID}" \
@@ -507,7 +507,7 @@ EOF
         fi
     done
     
-    # --- R2 彻底失败通知 ---
+    # --- [R2 彻底失败通知] ---
     FAIL_MSG="‼️ *R2 同步彻底失败* %0A❌ 经过 $MAX_R2_RETRIES 次重试仍未成功。 %0A⏰ 时间：$(date '+%H:%M:%S')"
     curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
          -d "chat_id=${TG_CHAT_ID}" \
@@ -517,7 +517,7 @@ EOF
     echo "===================================================="
     exit 1
 else
-    # --- 测速失败通知 ---
+    # --- [测速失败通知] ---
     curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
          -d "chat_id=${TG_CHAT_ID}" \
          -d "text=❌ R2 任务异常：未检测到测速结果文件！" \
