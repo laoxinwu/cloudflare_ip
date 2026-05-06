@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-06 16:23:45
+**本次更新**: 2026-05-06 16:32:42
 
 ## 订阅链接
 
@@ -227,7 +227,7 @@ nano auto.sh
 cd /data/data/com.termux/files/home/cloudflare_ip
 
 # --- [Telegram 机器人配置] ---
-TG_PROXY_DOMAIN="你创建的 Workers 代理域名" 
+TG_PROXY_DOMAIN="你创建的 Workers 代理域名"
 TG_TOKEN="你的机器人 Token"
 TG_CHAT_ID="你的 Chat ID"
 # --------------------
@@ -433,7 +433,7 @@ SECRET_KEY="你的机密访问密钥"
 BUCKET_NAME="你的桶名"
 
 # --- [Telegram 机器人配置] ---
-TG_PROXY_DOMAIN="你创建的 Workers 代理域名" 
+TG_PROXY_DOMAIN="你创建的 Workers 代理域名"
 TG_TOKEN="你的机器人 Token"
 TG_CHAT_ID="你的 Chat ID"
 # --------------------
