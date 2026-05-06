@@ -226,6 +226,12 @@ nano auto.sh
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
+# --- [Telegram 机器人配置] ---
+TG_PROXY_DOMAIN="你创建的 Workers 代理域名" 
+TG_TOKEN="你的机器人 Token"
+TG_CHAT_ID="你的 Chat ID"
+# --------------------
+
 # --- [任务时间] ---
 echo "===================================================="
 echo "任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
@@ -254,9 +260,20 @@ EOF
 
     # 检查主脚本的退出状态码
     if [ $? -eq 0 ]; then
+        # --- [新增：提取最快IP] ---
+        TOP_IP=$(head -n 1 best_ips.txt | awk '{print $1}')
+        
         echo "----------------------------------------------------"
         echo "✅ [$(date '+%Y-%m-%d %H:%M:%S')] 脚本运行并上传成功。"
         echo "===================================================="
+        
+        # --- [新增：成功通知] ---
+        MSG="🚀 *GitHub 同步成功* %0A🔥 最快 IP：\`$TOP_IP\` %0A⏰ 时间：$(date '+%H:%M:%S')"
+        curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
+             -d "chat_id=${TG_CHAT_ID}" \
+             -d "text=${MSG}" \
+             -d "parse_mode=Markdown" > /dev/null
+             
         exit 0
     else
         echo "❌ [$(date '+%H:%M:%S')] 哎呀，第 $RETRY_COUNT 次尝试失败。"
@@ -266,6 +283,14 @@ EOF
         else
             echo "‼️ [$(date '+%Y-%m-%d %H:%M:%S')] 任务在尝试 $MAX_RETRIES 次后彻底失败。"
             echo "===================================================="
+            
+            # --- [新增：彻底失败通知] ---
+            FAIL_MSG="‼️ *GitHub 同步彻底失败* %0A❌ 经过 $MAX_RETRIES 次重试仍未成功。 %0A⏰ 时间：$(date '+%H:%M:%S')"
+            curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
+                 -d "chat_id=${TG_CHAT_ID}" \
+                 -d "text=${FAIL_MSG}" \
+                 -d "parse_mode=Markdown" > /dev/null
+                 
             exit 1
         fi
     fi
@@ -401,23 +426,28 @@ nano auto.sh
 # 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
-# --- [任务时间] ---
-echo "===================================================="
-echo "任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
-echo "===================================================="
-
-# --- [修改区] 请填入你的 R2 参数 ---
-ACCOUNT_ID="你的账户ID"
-ACCESS_KEY="你的访问密钥ID"
+# --- [R2 参数配置] ---
+ACCOUNT_ID="你的账户 ID"
+ACCESS_KEY="你的访问密钥 ID"
 SECRET_KEY="你的机密访问密钥"
 BUCKET_NAME="你的桶名"
-# ------------------------------
+
+# --- [Telegram 机器人配置] ---
+TG_PROXY_DOMAIN="你创建的 Workers 代理域名" 
+TG_TOKEN="你的机器人 Token"
+TG_CHAT_ID="你的 Chat ID"
+# --------------------
+
+# --- [任务时间] ---
+echo "===================================================="
+echo "R2 任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "===================================================="
 
 # 1. 环境清理
 rm -f .git/index.lock
 pkill -9 git 2>/dev/null
 
-# 2. 运行测速 (仅运行一次，忽略 GitHub 的报错)
+# 2. 运行测速 (仅运行一次)
 echo "[$(date '+%H:%M:%S')] 正在进行本地测速..."
 bash linux_start.sh <<EOF
 2
@@ -425,6 +455,9 @@ EOF
 
 # 3. 针对 R2 的专项上传循环 (重试 3 次)
 if [ -f "best_ips.txt" ]; then
+    # 提取最快 IP
+    TOP_IP=$(head -n 1 best_ips.txt | awk '{print $1}')
+    
     MAX_R2_RETRIES=3
     R2_RETRY_COUNT=0
     
@@ -457,19 +490,40 @@ except Exception as e:
 EOF
 
         if [ $? -eq 0 ]; then
-            echo "✅ [$(date '+%H:%M:%S')] R2 同步圆满完成！"
+            echo "✅ [$(date '+%H:%M:%S')] R2 同备圆满完成！"
             echo "===================================================="
+            
+            # --- 成功通知 ---
+            MSG="🚀 *R2 优选同步成功* %0A🔥 最快 IP：\`$TOP_IP\` %0A⏰ 时间：$(date '+%H:%M:%S')"
+            curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
+                 -d "chat_id=${TG_CHAT_ID}" \
+                 -d "text=${MSG}" \
+                 -d "parse_mode=Markdown" > /dev/null
+            
             exit 0
         else
             echo "❌ [$(date '+%H:%M:%S')] R2 忙碌中，60秒后重试..."
             sleep 60
         fi
     done
-    echo "‼️ [$(date '+%H:%M:%S')] R2 在重试 $MAX_R2_RETRIES 次后失败。"
+    
+    # --- R2 彻底失败通知 ---
+    FAIL_MSG="‼️ *R2 同步彻底失败* %0A❌ 经过 $MAX_R2_RETRIES 次重试仍未成功。 %0A⏰ 时间：$(date '+%H:%M:%S')"
+    curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
+         -d "chat_id=${TG_CHAT_ID}" \
+         -d "text=${FAIL_MSG}" \
+         -d "parse_mode=Markdown" > /dev/null
+         
     echo "===================================================="
     exit 1
 else
-    echo "❌ [$(date '+%H:%M:%S')] 未检测到测速结果，请检查 linux_start.sh。"
+    # --- 测速失败通知 ---
+    curl -s -X POST "https://${TG_PROXY_DOMAIN}/bot${TG_TOKEN}/sendMessage" \
+         -d "chat_id=${TG_CHAT_ID}" \
+         -d "text=❌ R2 任务异常：未检测到测速结果文件！" \
+         -d "parse_mode=Markdown" > /dev/null
+
+    echo "❌ [$(date '+%H:%M:%S')] 未检测到测速结果。"
     echo "===================================================="
     exit 1
 fi
@@ -484,6 +538,65 @@ fi
     - 高速优选：https://ips.de5.net/best_ips.txt
     
     - 所有可用：https://ips.de5.net/full_ips.txt
+
+#
+**设定一个 Telegram 通知机器人（可选）**
+
+> 在测试上传后我们可以设定一个 Telegram 机器人推送通知，这样每次自动运行完自动测试后就能收到一个通知推送消息。
+
+一、 创建机器人
+
+1. 在 Telegram 搜索 @BotFather。
+
+2. 发送 /newbot，点击添加，名称和用户名根据自己需求或者随意填写，用户名必须以 bot 结尾。
+
+3. 创建成功后看到机器人配置页面，点 Copy 可以复制出机器人 API Token（比如 123456:ABC-DEF...）。
+
+4. 返回，搜索你自己的机器人，点一下 Start 或启动启动机器人。
+
+二、 获取你的 Chat ID
+
+1. 搜索 @userinfobot，发个消息。
+
+2. 它会返回显示你的信息，包括 ID（一串数字）。
+
+三、 配置设置
+
+> 由于测试 IP 时我们需要连接本地网络，但是使用本地网络又无法连接 Telegram，所以我们要搞一个代理服务，我们可以使用 Cloudflare Workers 来搭建一段代码，用来代理 Telegram。
+
+1. 打开 Cloudflare 的 Workers 和 Pages 页面，点击创建应用程序。
+
+2. 选择从 Hello World! 开始，名称随意，默认也行，点击部署。
+
+3. 完成后进入创建的 Workers，点击编辑代码，删除初始的 Hello World! 代码，粘贴下面代码部署：
+
+```bash
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    // 目标地址是 Telegram 官方 API
+    const targetUrl = 'https://api.telegram.org' + url.pathname + url.search;
+
+    const modifiedRequest = new Request(targetUrl, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    return fetch(modifiedRequest);
+  },
+};
+```
+
+4. 部署完成后，绑定一个域名，点击设置，然后看到 域和路由 点右边的添加，用来添加域名，例如：tg.de5.net
+
+5. 填入上面我们创建的 auto.sh 设置中，确保“TG_PROXY_DOMAIN”“TG_TOKEN”“TG_CHAT_ID”三项填写正确。
+
+6. 运行 auto.sh 进行测试。
+
+```bash
+bash ~/cloudflare_ip/auto.sh
+```
 
 #
 #### 常用快捷键与命令
