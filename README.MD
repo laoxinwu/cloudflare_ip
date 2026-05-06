@@ -100,7 +100,7 @@ git clone https://github.com/svip-s/cloudflare_ip.git
 ```
 
 五、进入目录：
-
+u
 ```bash
 cd cloudflare_ip
 ```
@@ -226,13 +226,15 @@ nano auto.sh
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
+# --- [任务时间] ---
+echo "===================================================="
+echo "任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "===================================================="
+
 # 2. 环境大扫除
-# 强行删除可能残留的 Git 锁（防止“旧锁未拆”导致新任务死锁）
 rm -f .git/index.lock
-# 强制杀死残留进程（防止上一轮卡死的进程占用端口或资源）
 pkill -9 git 2>/dev/null
 pkill -9 ssh 2>/dev/null
-# 清理网络缓存与冗余对象（让 Git 每次都像“冷启动”一样清爽）
 git gc --prune=now 2>/dev/null
 
 # 3. 设置重试参数
@@ -243,23 +245,27 @@ RETRY_COUNT=0
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     
-    echo "正在进行第 $RETRY_COUNT 次运行尝试..."
+    echo "[$(date '+%H:%M:%S')] 正在进行第 $RETRY_COUNT 次运行尝试..."
 
-    # 运行主脚本
+    # 运行主脚本 (2表示选择“测速并上传”)
     bash linux_start.sh <<EOF
 2
 EOF
 
+    # 检查主脚本的退出状态码
     if [ $? -eq 0 ]; then
-        echo "恭喜！脚本运行并上传成功。"
+        echo "----------------------------------------------------"
+        echo "✅ [$(date '+%Y-%m-%d %H:%M:%S')] 脚本运行并上传成功。"
+        echo "===================================================="
         exit 0
     else
-        echo "哎呀，第 $RETRY_COUNT 次尝试失败。"
+        echo "❌ [$(date '+%H:%M:%S')] 哎呀，第 $RETRY_COUNT 次尝试失败。"
         if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-            echo "等待 60 秒后重试..."
+            echo "等待 60 秒后进行下一次重试..."
             sleep 60
         else
-            echo "任务彻底失败。"
+            echo "‼️ [$(date '+%Y-%m-%d %H:%M:%S')] 任务在尝试 $MAX_RETRIES 次后彻底失败。"
+            echo "===================================================="
             exit 1
         fi
     fi
@@ -395,6 +401,11 @@ nano auto.sh
 # 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
+# --- [任务时间] ---
+echo "===================================================="
+echo "R2 任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "===================================================="
+
 # --- [修改区] 请填入你的 R2 参数 ---
 ACCOUNT_ID="你的账户ID"
 ACCESS_KEY="你的访问密钥ID"
@@ -407,7 +418,7 @@ rm -f .git/index.lock
 pkill -9 git 2>/dev/null
 
 # 2. 运行测速 (仅运行一次，忽略 GitHub 的报错)
-echo "正在进行本地测速..."
+echo "[$(date '+%H:%M:%S')] 正在进行本地测速..."
 bash linux_start.sh <<EOF
 2
 EOF
@@ -419,7 +430,7 @@ if [ -f "best_ips.txt" ]; then
     
     while [ $R2_RETRY_COUNT -lt $MAX_R2_RETRIES ]; do
         R2_RETRY_COUNT=$((R2_RETRY_COUNT + 1))
-        echo "正在尝试同步 R2 (第 $R2_RETRY_COUNT 次)..."
+        echo "[$(date '+%H:%M:%S')] 正在尝试同步 R2 (第 $R2_RETRY_COUNT 次)..."
 
         python3 - <<EOF
 import boto3
@@ -446,16 +457,20 @@ except Exception as e:
 EOF
 
         if [ $? -eq 0 ]; then
-            echo "任务圆满完成！"
+            echo "✅ [$(date '+%H:%M:%S')] R2 同步圆满完成！"
+            echo "===================================================="
             exit 0
         else
-            echo "R2 忙碌中，60秒后重试..."
+            echo "❌ [$(date '+%H:%M:%S')] R2 忙碌中，60秒后重试..."
             sleep 60
         fi
     done
+    echo "‼️ [$(date '+%H:%M:%S')] R2 在重试 $MAX_R2_RETRIES 次后失败。"
+    echo "===================================================="
     exit 1
 else
-    echo "未检测到测速结果，请检查 linux_start.sh 是否正常。"
+    echo "❌ [$(date '+%H:%M:%S')] 未检测到测速结果，请检查 linux_start.sh。"
+    echo "===================================================="
     exit 1
 fi
 ```
