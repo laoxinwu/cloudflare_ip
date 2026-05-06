@@ -25,13 +25,13 @@ www.okcupid.com#OkCupid
 store.ubi.com#Ubisoft
 staticdelivery.nexusmods.com#NexusMods
 
-skk.moe
+www.visakorea.com
 www.visa.com.sg
 www.visa.com.hk
 www.visa.com.tw
 www.visa.co.jp
-www.visakorea.com
-www.gco.gov.qa
-www.gov.se
-www.4chan.org
 log.bpminecraft.com
+www.gco.gov.qa
+www.4chan.org
+www.gov.se
+skk.moe
