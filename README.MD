@@ -6,7 +6,7 @@
 
 ## 订阅链接
 
-Cloudflare R2 订阅连接（推荐）：
+**Cloudflare R2 订阅连接（推荐）**：
 
   - 高速优选：
 ```bash
@@ -17,7 +17,7 @@ https://ips.gaoji.uk/best_ips.txt
 https://ips.gaoji.uk/full_ips.txt
 ```
 
-GitHub 仓库订阅链接（不推荐）：
+**GitHub 仓库订阅链接（不推荐）**：
 
   - 高速优选：
 ```bash
@@ -42,15 +42,15 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
   
     - 原始 GitHub 仓库连接，有时候会因为网络原因上传失败，导致更新不及时。
 
-  - 高速优选：
+  - 高速优选
 
     - 是筛选出来的里面已通过测速的，想省事或者不知道该选哪个，就直接选这个。
 
-  - 所有可用：
+  - 所有可用
 
     - 是筛选出来每个地区延迟最低的前十个，不保证速度是最快的，适合二次自己测速。
 
-  - 优选域名：
+  - 优选域名
 
     - 收集的一些优选域名，可以作为备用，不太推荐使用，平时还行，人多了，高峰期比较卡，甚至断网。
 
