@@ -2,10 +2,11 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-06 10:02:51
+**本次更新**: 2026-05-06 11:02:54
 
 ## 订阅链接
 
+#
 **Cloudflare R2 订阅连接（推荐）**：
 
   - 高速优选：
@@ -17,6 +18,7 @@ https://ips.gaoji.uk/best_ips.txt
 https://ips.gaoji.uk/full_ips.txt
 ```
 
+#
 **GitHub 仓库订阅链接（不推荐）**：
 
   - 高速优选：
@@ -32,6 +34,7 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/full_ips.
 https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.txt
 ```
 
+#
 **区别**:
 
   - Cloudflare R2 订阅连接
@@ -372,7 +375,7 @@ bash ~/cloudflare_ip/auto.sh
 在 Termux 中运行以下命令，确保拥有上传能力：
 
 ```bash
-pip install boto3
+pip install tqdm boto3
 ```
 
 三、 修改或直接创建启动脚本 (auto.sh)：
@@ -490,8 +493,7 @@ fi
 | **full_ips.txt** | 所有可用 |
 | **domain.txt** | 优选域名 |
 
-#
-#
+---
 ### 电脑端 (Windows)
 
 > 适合在本地电脑快速测速，或利用电脑闲置带宽更新仓库。
@@ -525,8 +527,7 @@ python update.py --no-github-sync
 
     - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
 
-#
-#
+---
 ### Linux 服务端 (Ubuntu/Debian/CentOS)
 
 > 适合部署在 VPS 服务器上，实现 24h 无人值守自动更新。
@@ -563,8 +564,8 @@ bash linux_start.sh
 2
 EOF
 ```
-#
-#
+
+---
 ## 代码来源
 
 仓库：[cfip](https://github.com/HandsomeMJZ/cfip)
