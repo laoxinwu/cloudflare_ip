@@ -5,7 +5,11 @@
 **本次更新**: 2026-05-06 17:02:54
 
 ## 订阅链接
-Telegram 更新通知：[通知机器人](https://t.me/Cloudflare_IP_Bot)
+
+Telegram 优选 IP 更新通知：
+
+[通知机器人](https://t.me/Cloudflare_IP_Bot)
+
 #
 **Cloudflare R2 订阅连接（推荐）**：
 
