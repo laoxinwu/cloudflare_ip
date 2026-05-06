@@ -6,10 +6,6 @@
 
 ## 订阅链接
 
-Telegram 优选 IP 更新通知：
-
-[通知机器人](https://t.me/Cloudflare_IP_Bot)
-
 #
 **Cloudflare R2 订阅连接（推荐）**：
 
