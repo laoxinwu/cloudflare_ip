@@ -1,10 +1,23 @@
 # Cloudflare 优选 IP
 
 **测试地**: 中国陕西移动  
-**更新频率**: 不限时更新  
+**更新频率**: 每小时更新一次  
 **本次更新**: 2026-05-06 10:02:51
 
 ## 订阅链接
+
+Cloudflare R2 订阅连接（推荐）：
+
+  - 高速优选：
+```bash
+https://ips.gaoji.uk/best_ips.txt
+```
+  - 所有可用：
+```bash
+https://ips.gaoji.uk/full_ips.txt
+```
+
+GitHub 仓库订阅链接（不推荐）：
 
   - 高速优选：
 ```bash
@@ -20,6 +33,14 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 ```
 
 区别:
+
+  - Cloudflare R2 订阅连接
+  
+    - 更新更及时，速度更快，效果更好。
+
+  - GitHub 仓库订阅链接
+  
+    - 原始 GitHub 仓库连接，有时候会因为网络原因上传失败，导致更新不及时。
 
   - 高速优选：
 
@@ -194,7 +215,7 @@ sv down crond
 nano auto.sh
 ```
 
-粘贴以下代码保存，代码设置了循环，如果上传失败说明可能网络波动，会重新尝试运行，默认3次：
+粘贴以下代码保存：
 
 ```bash
 #!/bin/bash
@@ -241,6 +262,8 @@ EOF
     fi
 done
 ```
+
+> 代码设置了循环，如果上传失败说明可能网络波动，会重新尝试运行，默认3次。
 
 四、赋予脚本执行权限：
 
@@ -317,6 +340,134 @@ bash ~/cloudflare_ip/auto.sh
 > 建议可以使用家里的旧手机进行部署，由于 CPU 进行大规模测速（测速是非常耗电的，因为涉及高频的网络吞吐和 CPU 计算），手机电量掉得会比较快。如果你不介意耗电也可以在你常用的安卓设备或手机部署安装。
 
 #
+**Cloudflare R2 存储上传**：
+
+> 由于国内网络原因，有些地区可能使用 GitHub 的上传方式很不稳定，有时候失败，有时候成功，如果你可以忍受 GitHub 的不稳定，或者你的地区 GitHub 上传很稳定确实没问题，完成上面的步骤就可以了。
+
+> 很不幸的是，我所在的地区就是很不稳定的情况，然后我们可以利用 Cloudflare 上传到 R2 存储来实现同样的效果，然后复制出订阅连接
+，R2 相较于 GitHub 效果更好，不怕上传失败，更新更及时。
+
+一、 核心参数准备 (CF 后台)
+
+从 Cloudflare 控制台获取以下 4 个“通关密码”：
+
+  - ACCOUNT_ID：
+
+    - 在 Cloudflare 首页右侧“API”区块复制或者去 Workers 和 Pages 页面。
+
+  - BUCKET_NAME：
+
+    - 在 R2 页面创建的存储桶，就是你设置的名称，保持默认创建就行。
+
+  - ACCESS_KEY 和 SECRET_KEY：
+
+    - 进入 R2 -> 点击 API 令牌的管理。
+
+    - 然后帐户 API 令牌点击创建 Account API 令牌。权限选：第一个管理员读写，点击创建。
+
+    - 创建后保存好弹出的 访问密钥 ID 和 机密访问密钥，最好截图或者保存弹出的所有内容，因为网页刷新或者关闭重新打开就再也看不到令牌值了。
+
+二、 本地环境配置 (Termux)
+
+在 Termux 中运行以下命令，确保拥有上传能力：
+
+```bash
+pip install boto3
+```
+
+三、 修改或直接创建启动脚本 (auto.sh)：
+
+```bash
+cd cloudflare_ip
+```
+
+```bash
+nano auto.sh
+```
+
+粘贴以下代码，如果有内容，全部删除然后粘贴保存，或者退出直接删除 auto.sh 重新创建也行。
+
+```bash
+#!/bin/bash
+# 进入项目目录
+cd /data/data/com.termux/files/home/cloudflare_ip
+
+# --- [修改区] 请填入你的 R2 参数 ---
+ACCOUNT_ID="你的账户ID"
+ACCESS_KEY="你的访问密钥ID"
+SECRET_KEY="你的机密访问密钥"
+BUCKET_NAME="你的桶名"
+# ------------------------------
+
+# 1. 环境清理
+rm -f .git/index.lock
+pkill -9 git 2>/dev/null
+
+# 2. 运行测速 (仅运行一次，忽略 GitHub 的报错)
+echo "正在进行本地测速..."
+bash linux_start.sh <<EOF
+2
+EOF
+
+# 3. 针对 R2 的专项上传循环 (重试 3 次)
+if [ -f "best_ips.txt" ]; then
+    MAX_R2_RETRIES=3
+    R2_RETRY_COUNT=0
+    
+    while [ $R2_RETRY_COUNT -lt $MAX_R2_RETRIES ]; do
+        R2_RETRY_COUNT=$((R2_RETRY_COUNT + 1))
+        echo "正在尝试同步 R2 (第 $R2_RETRY_COUNT 次)..."
+
+        python3 - <<EOF
+import boto3
+from botocore.config import Config
+import os, sys
+
+try:
+    s3 = boto3.client(
+        service_name="s3",
+        endpoint_url="https://${ACCOUNT_ID}.r2.cloudflarestorage.com",
+        aws_access_key_id="${ACCESS_KEY}",
+        aws_secret_access_key="${SECRET_KEY}",
+        region_name="auto",
+        config=Config(s3={'addressing_style': 'path'})
+    )
+    for file_name in ["best_ips.txt", "full_ips.txt"]:
+        if os.path.exists(file_name):
+            s3.upload_file(file_name, "${BUCKET_NAME}", file_name)
+            print(f"✅ {file_name} 同步成功")
+    sys.exit(0)
+except Exception as e:
+    print(f"❌ R2 同步失败: {str(e)}")
+    sys.exit(1)
+EOF
+
+        if [ $? -eq 0 ]; then
+            echo "任务圆满完成！"
+            exit 0
+        else
+            echo "R2 忙碌中，60秒后重试..."
+            sleep 60
+        fi
+    done
+    exit 1
+else
+    echo "未检测到测速结果，请检查 linux_start.sh 是否正常。"
+    exit 1
+fi
+```
+
+> 脚本会运行测试，忽略 GitHub 的上传错误（能成就成，不成就忽略），然后向 R2 进行上传，GitHub 上传随缘，R2 设置了失败默认3次循环。正常情况下 R2 是最稳的，几乎不会失败。
+
+四、 订阅链接
+
+  - 点击刚才创建的 R2 存储桶的设置，然后找到自定义域，添加一个域名比如：ips.de5.net，那么订阅地址就是：
+  
+    - 高速优选：https://ips.de5.net/best_ips.txt
+    
+    - 所有可用：https://ips.de5.net/full_ips.txt
+
+#
 #### 常用快捷键与命令
 | 动作 | 命令/按键 |
 | :--- | :--- |
@@ -339,6 +490,7 @@ bash ~/cloudflare_ip/auto.sh
 | **full_ips.txt** | 所有可用 |
 | **domain.txt** | 优选域名 |
 
+#
 #
 ### 电脑端 (Windows)
 
@@ -373,6 +525,7 @@ python update.py --no-github-sync
 
     - 右键点击 win_start.ps1，选择 “使用 PowerShell 运行”。
 
+#
 #
 ### Linux 服务端 (Ubuntu/Debian/CentOS)
 
@@ -410,7 +563,8 @@ bash linux_start.sh
 2
 EOF
 ```
-
+#
+#
 ## 代码来源
 
 仓库：[cfip](https://github.com/HandsomeMJZ/cfip)
