@@ -542,7 +542,7 @@ fi
 #
 **设定一个 Telegram 通知机器人（可选）**
 
-> 在测试上传后我们可以设定一个 Telegram 机器人推送通知，这样每次自动运行完自动测试后就能收到一个通知推送消息。
+> 在测试上传后我们可以设定一个 Telegram 机器人推送通知，这样每次运行完自动测试上传后就能收到一个通知推送消息。
 
 一、 创建机器人
 
@@ -574,16 +574,37 @@ fi
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    // 目标地址是 Telegram 官方 API
+    
+    // 1. 构建目标 Telegram API 地址
     const targetUrl = 'https://api.telegram.org' + url.pathname + url.search;
 
-    const modifiedRequest = new Request(targetUrl, {
-      method: request.method,
-      headers: request.headers,
-      body: request.body,
-    });
+    // 2. 深度克隆请求头，避免引用问题
+    const newHeaders = new Headers(request.headers);
+    newHeaders.set('Host', 'api.telegram.org'); // 强行校准 Host
 
-    return fetch(modifiedRequest);
+    // 3. 使用 Request 对象的克隆机制处理 body
+    const fetchOptions = {
+      method: request.method,
+      headers: newHeaders,
+      redirect: 'follow'
+    };
+
+    // 只有非 GET/HEAD 请求才携带 body
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      fetchOptions.body = request.body;
+    }
+
+    try {
+      const response = await fetch(targetUrl, fetchOptions);
+      
+      // 4. 将 Telegram 的响应原封不动传回给你的 Termux
+      const modifiedResponse = new Response(response.body, response);
+      modifiedResponse.headers.set('Access-Control-Allow-Origin', '*'); // 顺便加个跨域，方便调试
+      
+      return modifiedResponse;
+    } catch (e) {
+      return new Response('Proxy Error: ' + e.message, { status: 500 });
+    }
   },
 };
 ```
