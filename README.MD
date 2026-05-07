@@ -2,7 +2,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-07 18:07:06
+**本次更新**: 2026-05-07 23:33:40
 
 ## 订阅链接
 
@@ -423,6 +423,7 @@ nano auto.sh
 
 ```bash
 #!/bin/bash
+
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
@@ -623,6 +624,41 @@ export default {
 
 ```bash
 bash ~/cloudflare_ip/auto.sh
+```
+
+#
+**开机后台启动 Termux 运行自动自动任务（可选）**
+
+步骤：
+
+1. 下载安装 Termux:Boot 插件（注意：必须和 Termux 本体的安装来源一致）。
+
+2. 安装后手动打开一次 Termux:Boot（为了给系统注册权限），有些系统需要设置自动启动和后台无限制。
+
+3. 在 Termux 里创建自启目录：
+
+```bash
+mkdir -p ~/.termux/boot/
+```
+
+4. 在该目录下创建一个脚本文件（比如：叫 start-cron.sh）：
+
+```bash
+nano ~/.termux/boot/start-cron.sh
+```
+
+5. 写入下面的启动 cron 命令：
+
+```bash
+#!/data/data/com.termux/files/usr/bin/sh
+termux-wake-lock
+crond
+```
+
+6. 给脚本执行权限：
+
+```bash
+chmod +x ~/.termux/boot/start-cron.sh
 ```
 
 #
