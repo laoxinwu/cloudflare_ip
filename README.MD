@@ -3,7 +3,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-08 07:25:27
+**本次更新**: 2026-05-08 12:53:26
 
 ## 订阅链接
 **Cloudflare R2 订阅连接（推荐）**：
@@ -46,15 +46,15 @@ https://raw.githubusercontent.com/svip-s/cloudflare_ip/refs/heads/main/domain.tx
 
   - 高速优选
 
-    - 通过脚本筛选出来已通过测速 IP，想省事或者不知道该选哪个，就直接选这个。
+    - 通过脚本筛选出来下载测速最快 IP（速度因地区而异），想省事或者不知道该选哪个，可以尝试选这个。
 
   - 所有可用
 
-    - 通过脚本筛选出来每个地区延迟最低的前十个，未测速，不保证速度，适合自己进行测速。
+    - 通过脚本筛选出来每个地区延迟最低的前十个 IP（延迟因地区而异），未经测速，只测了延迟，适合自己进行测速。
 
   - 优选域名
 
-    - 收集的一些优选域名，可以作为备用，不太推荐使用，平时还行，使用人过多或者晚高峰时比较卡，有些地区可能甚至断网。
+    - 收集的一些优选域名，可以作为备用，不太推荐使用，平时不算太差，但是使用人数过多或者晚高峰时比较卡，有些地区甚至断网。
 
 ## 订阅链接使用方法
 
@@ -222,6 +222,9 @@ nano auto.sh
 ```bash
 #!/bin/bash
 
+# 启动 Termux 唤醒锁
+termux-wake-lock
+
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
 
@@ -313,7 +316,7 @@ crontab -e
 添加下面内容（如果出现选择编辑器，建议选择 nano，除非你会使用其它编辑器，例如：vi）：
 
 ```bash
-30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh 2>&1 | grep -v "%" >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log
+30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
 ```
 
 30 4 * * *： 表示每天凌晨 4：30 自动跑测速并上传。cron_log.log 为日志文件，万一哪天没成功，可以进行查看原因。如果不想生成日志文件，就删掉 >> 后面的代码，包括 >>，不会有任何负面影响，日志文件会随着时间推移而变大，虽然占不了多少内存，你也可以隔段时间手动清理一下，rm 删掉即可，不在乎那点内存占用，无视就行。
@@ -422,6 +425,9 @@ nano auto.sh
 
 ```bash
 #!/bin/bash
+
+# 启动 Termux 唤醒锁
+termux-wake-lock
 
 # 1. 进入项目目录
 cd /data/data/com.termux/files/home/cloudflare_ip
@@ -652,6 +658,7 @@ nano ~/.termux/boot/start-cron.sh
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/sh
+termux-wake-lock
 crond
 ```
 
