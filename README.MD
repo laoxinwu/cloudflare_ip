@@ -3,7 +3,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-08 18:16:47
+**本次更新**: 2026-05-08 20:03:52
 
 ## 订阅链接
 **Cloudflare R2 订阅连接（推荐）**：
@@ -320,10 +320,10 @@ crontab -e
 添加下面内容（如果出现选择编辑器，建议选择 nano，除非你会使用其它编辑器，例如：vi）：
 
 ```bash
-30 4 * * * /data/data/com.termux/files/home/cloudflare_ip/auto.sh >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
+30 4 * * * TERM=xterm stdbuf -oL -eL script -q -c "bash /data/data/com.termux/files/home/cloudflare_ip/auto.sh" /dev/null | col -b >> /data/data/com.termux/files/home/cloudflare_ip/cron_log.log 2>&1
 ```
 
-30 4 * * *： 表示每天凌晨 4：30 自动跑测速并上传。cron_log.log 为日志文件，万一哪天没成功，可以进行查看原因。如果不想生成日志文件，就删掉 >> 后面的代码，包括 >>，不会有任何负面影响，日志文件会随着时间推移而变大，虽然占不了多少内存，你也可以隔段时间手动清理一下，rm 删掉即可，不在乎那点内存占用，无视就行。
+30 4 * * *： 表示每天凌晨 4：30 自动跑测速并上传。cron_log.log 为日志文件，万一哪天没成功，可以进行查看原因。日志文件会随着时间推移而变大，虽然占不了多少内存，你也可以隔段时间手动清理一下，rm -f 删掉即可，不在乎无视就行。
 
 调整运行频率可以修改比如：
 
