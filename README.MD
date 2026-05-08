@@ -3,7 +3,7 @@
 
 **测试地**: 中国陕西移动  
 **更新频率**: 每小时更新一次  
-**本次更新**: 2026-05-08 18:02:57
+**本次更新**: 2026-05-08 18:16:47
 
 ## 订阅链接
 **Cloudflare R2 订阅连接（推荐）**：
@@ -222,6 +222,9 @@ nano auto.sh
 ```bash
 #!/bin/bash
 
+# 核心环境变量声明
+export PATH=/data/data/com.termux/files/usr/bin:$PATH
+
 # 启动 Termux 唤醒锁
 termux-wake-lock
 
@@ -425,6 +428,29 @@ nano auto.sh
 粘贴以下代码，如果有内容，全部删除然后粘贴保存，或者退出直接删除 auto.sh 重新创建也行，新建一定要确保赋予脚本执行权限。
 
 ```bash
+#!/bin/bash
+
+# 核心环境变量声明
+export PATH=/data/data/com.termux/files/usr/bin:$PATH
+
+# 启动 Termux 唤醒锁
+termux-wake-lock
+
+# 1. 进入项目目录
+cd /data/data/com.termux/files/home/cloudflare_ip
+
+# --- [Cloudflare R2 参数配置] ---
+ACCOUNT_ID="你的账户 ID"
+ACCESS_KEY="你的访问密钥 ID"
+SECRET_KEY="你的机密访问密钥"
+BUCKET_NAME="你的桶名"
+
+# --- [Telegram 机器人配置] ---
+TG_PROXY_DOMAIN="你创建的 Workers 代理域名"
+TG_TOKEN="你的机器人 Token"
+TG_CHAT_ID="你的 Chat ID"
+# --------------------
+
 # --- [任务时间] ---
 echo "===================================================="
 echo "任务启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
@@ -437,30 +463,9 @@ rm -f best_ips.txt full_ips.txt
 
 # 3. 运行测速
 echo "[$(date '+%H:%M:%S')] 正在进行本地测速..."
-
-if [ ! -t 0 ]; then
-    # 移除日志文件中的进度条
-    echo "2" | stdbuf -oL bash linux_start.sh 2>&1 | col -b | awk '
-    {
-        current_head = substr($0, 1, 15)
-        if (current_head == last_head && $0 ~ /%/) {
-            last_line = $0
-        } else {
-            if (last_line != "") print last_line
-            if ($0 !~ /Choose an action|Enter 1 or 2/) print $0
-            last_line = ""
-        }
-        last_head = current_head
-    }
-    END { if (last_line != "") print last_line }'
-    
-    if [ -s "best_ips.txt" ]; then
-        echo "[$(date '+%H:%M:%S')] ✅ 脚本全链路运行完成。"
-    fi
-else
-    # 前台手动运行
-    echo "2" | bash linux_start.sh
-fi
+bash linux_start.sh <<EOF
+2
+EOF
 
 # 4. 针对 R2 的专项上传循环 (重试 3 次)
 if [ -f "best_ips.txt" ]; then
